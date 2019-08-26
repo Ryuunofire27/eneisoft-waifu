@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import * as dialogflow from 'dialogflow';
 import { IChatbot } from "../chatbot/interfaces/chatbot.interface";
 import { CreateIntentDto } from "./dto/create-intent.dto";
+import * as uuid from 'uuid/v1';
 
 @Injectable()
 export class DialogflowHelper{
@@ -62,8 +63,13 @@ export class DialogflowHelper{
       intent: intent,
     };
 
+    console.log(createIntentRequest);
+
     // Create the intent
     const responses = await intentsClient.createIntent(createIntentRequest);
+
+    console.log(responses);
+
     return responses
     // [END dialogflow_create_intent]
   }
@@ -75,4 +81,19 @@ export class DialogflowHelper{
 
     await intentsClient.deleteIntent(request);
   }
+
+  getSessionClient(chatbot: IChatbot){
+    const credentials = {
+      credentials: {
+        client_email: chatbot.clientEmail,
+        private_key: chatbot.privateKey,
+      },
+    }
+    return new dialogflow.SessionsClient(credentials);
+  }
+
+  getSessionPath(sessionClient, projectId){
+    return sessionClient.sessionPath(projectId, uuid())
+  }
+
 }

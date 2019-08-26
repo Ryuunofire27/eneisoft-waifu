@@ -12,6 +12,9 @@ import { DatabaseModule } from "../database/database.module";
     DialogflowHelper,
     ...DialogflowProviders,
     DialogflowService
+  ],
+  exports: [
+    DialogflowService,
   ]
 })
 export class DialogflowModule{}

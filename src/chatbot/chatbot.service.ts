@@ -4,6 +4,7 @@ import { DialogflowService } from '../dialogflow/dialogflow.service';
 import { CreateChatbotDto } from './dto/create-chatbot.dto';
 import { CreateIntentDto } from '../dialogflow/dto/create-intent.dto';
 import { IIntent } from '../dialogflow/interfaces/intent.interface';
+import { IChatbot } from './interfaces/chatbot.interface';
 
 @Injectable()
 export class ChatbotService {
@@ -22,7 +23,7 @@ export class ChatbotService {
     return await this.model.find();
   }
 
-  async getChatbot(chatbotId?: string){
+  async getChatbot(chatbotId?: string): Promise<IChatbot>{
     if(chatbotId) return await this.model.findById(chatbotId);
     return (await this.model.find().limit(1))[0];
   }
@@ -32,5 +33,12 @@ export class ChatbotService {
     if (!chatbot) throw new BadRequestException('No existe el chatbot especificado.');
     const newIntent = await this.intentService.createIntent(chatbot, intentData);
     return newIntent;
+  }
+
+  async getChatbotResponse(chatbotId: string, question): Promise<{ answer: string, status: number }>{
+    const chatbot = await this.getChatbot(chatbotId);
+    if (!chatbot) throw new BadRequestException('No existe el chatbot especificado.');
+    const answer = await this.intentService.getResponseIntent(chatbot, question);
+    return answer;
   }
 }

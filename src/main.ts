@@ -16,6 +16,7 @@ async function bootstrap() {
     .setTitle('Waifu example')
     .setDescription('The waifu API description')
     .setVersion('1.0')
+    .setBasePath('/api/v1')
     .build();
 
   app.use(bodyParser.json({ limit: '5mb' }));

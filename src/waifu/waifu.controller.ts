@@ -3,6 +3,7 @@ import { WaifuService } from './waifu.service';
 import { ApiUseTags, ApiConsumes, ApiResponse, ApiProduces } from '@nestjs/swagger';
 import { MessageDTO } from './dto/message.dto';
 import { MessageResponse } from './responses/message.response';
+import { ChatbotService } from '../chatbot/chatbot.service';
 
 @Controller('waifu')
 @ApiUseTags('waifu')
@@ -10,7 +11,8 @@ import { MessageResponse } from './responses/message.response';
 @ApiProduces('application/json')
 export class WaifuController {
   constructor(
-    private readonly service: WaifuService
+    private readonly service: WaifuService,
+    private readonly chatbotService: ChatbotService,
   ){}
 
   @Post()
@@ -19,13 +21,11 @@ export class WaifuController {
     description: 'Ok',
     type: MessageResponse
   })
-  postWaifu(
+  async postWaifu(
     @Body() message: MessageDTO
   ){
-    const status = this.service.getRandomStatus();
-    return {
-      message: message.message,
-      status
-    }
+    const answer = await this.chatbotService.getChatbotResponse(undefined, message.message);
+
+    return answer;
   }
 }

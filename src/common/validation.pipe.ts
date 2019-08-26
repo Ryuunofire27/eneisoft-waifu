@@ -12,9 +12,9 @@ export class Validation implements PipeTransform<any> {
     const errors = await validate(object);
     if (errors.length > 0) {
       let message = '';
-      errors.map((e) => {
+      errors.forEach((e) => {
         const keys = Object.keys(e.constraints);
-        keys.map((k) => {
+        keys.forEach((k) => {
           message += e.constraints[k] + '\n';
         })
       })

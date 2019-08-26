@@ -46,9 +46,11 @@ export class DialogflowService{
     const response = responses[0];
     if(response){
       const intent = response.queryResult.intent;
-      const status = (await this.model.findOne({ chatbotId: chatbot._id.toString(), name: intent.displayName })).status || 1;
+      const intentModel = await this.model.findOne({ chatbotId: chatbot._id.toString(), name: intent.displayName });
+      const status = intentModel ? intentModel.status : 1;
+      const answer = intentModel ? response.queryResult.fulfillmentText : '¿Que dices oni-chan?'
       return {
-        answer: response.queryResult.fulfillmentText,
+        answer,
         status
       }
     }

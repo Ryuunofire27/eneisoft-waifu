@@ -48,14 +48,14 @@ export class DialogflowService{
       const intent = response.queryResult.intent;
       const intentModel = await this.model.findOne({ chatbotId: chatbot._id.toString(), name: intent.displayName });
       const status = intentModel ? intentModel.status : 1;
-      const answer = intentModel ? response.queryResult.fulfillmentText : '¿Que dices oni-chan?'
+      const answer = intentModel ? response.queryResult.fulfillmentText : 'Perdon, no entiendo lo que me escribiste'
       return {
         answer,
         status
       }
     }
     return {
-      answer: '¿Que dices oni-chan?',
+      answer: 'Perdon, no entiendo lo que me escribiste',
       status: 1
     };
   }
